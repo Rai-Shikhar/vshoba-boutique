@@ -4,36 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>V Shoba's Boutique</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-  <header>
-    <h1>V Shoba's <span>Boutique</span></h1>
-    <input type="search" id="searchBox" placeholder="Search sarees, kurtis...">
-    <select id="categorySelect">
-      <option value="">All categories</option>
-    </select>
-    <div class="spacer"></div>
-    <div id="userArea"></div>
-    <button class="btn-cart" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+
+  <div class="announce">Handpicked · Handwoven · Home delivered across India</div>
+
+  <header class="nav">
+    <div class="brand" onclick="window.location.href='/'">V Shoba's <span>Boutique</span></div>
+    <!-- Real categories are injected here by shop.js (loadCategories) -->
+    <nav class="links" id="navLinks"></nav>
+    <div class="navright">
+      <div class="search-toggle">
+        <span>&#9433;</span>
+        <input type="text" id="searchBox" placeholder="search sarees, kurtis…" />
+      </div>
+      <span id="userArea"></span>
+      <a href="/orders.html" class="greet u" id="ordersLink">My orders</a>
+      <button class="cart" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+    </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="inner">
-        <div class="kicker">Handpicked · Handwoven · Home delivered</div>
-        <h2>Timeless elegance, <em>woven with love</em> since generations</h2>
-        <p>Silk sarees, comfort kurtis and festive classics — every piece chosen
-        by Shoba herself, delivered to your door.</p>
-        <a class="btn" href="#grid">Shop the Collection</a>
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Three generations of weave</span>
+      <h1 class="headline">Timeless elegance,<br><em>woven with love</em><br>since generations.</h1>
+      <p class="hero-sub">Silk sarees, comfort kurtis and festive classics — every piece chosen by Shoba herself, delivered gently to your door.</p>
+      <div class="cta-row">
+        <a href="#grid" class="btn-primary">Shop the collection</a>
+        <a href="#" class="link-under">Our story</a>
       </div>
-    </section>
+    </div>
+    <div class="hero-visual">
+      <div class="glyph">&#2358;</div>
+      <span class="hero-tag">New season</span>
+    </div>
+  </section>
 
-    <p id="welcome"></p>
-    <div id="grid"></div>
-  </main>
+  <div class="ornament"><span class="line"></span><span class="mark"></span><span class="line"></span></div>
 
-  <footer>V Shoba's Boutique &mdash; handpicked sarees, kurtis and more</footer>
+  <div class="welcome" id="welcomeBlock">
+    <h2 id="welcomeTitle"></h2>
+    <p id="welcomeSub"></p>
+  </div>
+
+  <section class="grid" id="grid"></section>
+
+  <div class="ornament"><span class="line"></span><span class="mark"></span><span class="line"></span></div>
+
+  <footer>
+    <p>V Shoba's Boutique &mdash; handpicked, handwoven, home delivered.</p>
+  </footer>
 
   <div id="toast"></div>
 
@@ -43,7 +67,7 @@
     <h2>Your Cart</h2>
     <div id="cartItems"></div>
     <div id="cartFoot">
-      <div class="total">Total: <span id="cartTotal">₹0.00</span></div>
+      <div class="total">Total: <span id="cartTotal">&#8377;0.00</span></div>
       <button id="checkoutBtn">Checkout</button>
       <div class="hint" id="cartHint"></div>
     </div>

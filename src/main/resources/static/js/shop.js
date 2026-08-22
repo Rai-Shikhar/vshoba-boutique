@@ -1,6 +1,8 @@
 // Shop page logic: load products, render grid, handle cart + auth modal.
+// Bound to the new storefront design (home.css).
 
 let allProducts = [];
+let currentCategory = '';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadCategories();
@@ -13,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('checkoutBtn').addEventListener('click', goCheckout);
 
   document.getElementById('searchBox').addEventListener('input', applyFilters);
-  document.getElementById('categorySelect').addEventListener('change', applyFilters);
 
   document.getElementById('closeModal').addEventListener('click', () =>
     document.getElementById('modalOverlay').classList.remove('show'));
@@ -23,23 +24,42 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('registerForm').addEventListener('submit', doRegister);
 });
 
+// Nav links are built from the REAL categories returned by the backend.
+// Clicking one filters the grid; clicking again clears the filter.
 async function loadCategories() {
+  const nav = document.getElementById('navLinks');
   try {
     const cats = await API.get('/api/products/categories');
-    const select = document.getElementById('categorySelect');
-    cats.forEach((c) => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      select.appendChild(opt);
+    buildNavLinks(nav, cats);
+  } catch {
+    // No categories available - leave nav empty rather than inventing links.
+    nav.innerHTML = '';
+  }
+}
+
+function buildNavLinks(nav, cats) {
+  const make = (label, value) => {
+    const a = document.createElement('a');
+    a.textContent = label;
+    a.href = '#grid';
+    a.dataset.cat = value;
+    if (value === currentCategory) a.classList.add('active');
+    a.addEventListener('click', () => {
+      currentCategory = (currentCategory === value) ? '' : value;
+      nav.querySelectorAll('a').forEach((el) =>
+        el.classList.toggle('active', el.dataset.cat === currentCategory));
+      applyFilters();
     });
-  } catch { /* categories are a nice-to-have */ }
+    nav.appendChild(a);
+  };
+  if (cats.length > 1 || currentCategory) make('All', '');
+  cats.slice(0, 5).forEach((c) => make(c, c));
 }
 
 async function loadProducts() {
   try {
     allProducts = await API.get('/api/products');
-    renderGrid(allProducts);
+    applyFilters();
   } catch (err) {
     document.getElementById('grid').innerHTML =
       `<p class="empty">Could not load products: ${err.message}</p>`;
@@ -48,9 +68,8 @@ async function loadProducts() {
 
 function applyFilters() {
   const term = document.getElementById('searchBox').value.trim().toLowerCase();
-  const category = document.getElementById('categorySelect').value;
   const filtered = allProducts.filter((p) => {
-    const matchesCategory = !category || p.category === category;
+    const matchesCategory = !currentCategory || p.category === currentCategory;
     const matchesTerm = !term ||
       p.name.toLowerCase().includes(term) ||
       (p.description && p.description.toLowerCase().includes(term));
@@ -59,31 +78,47 @@ function applyFilters() {
   renderGrid(filtered);
 }
 
+function formatPrice(n) {
+  const num = Number(n);
+  return '₹' + num.toLocaleString('en-IN',
+    Number.isInteger(num)
+      ? { maximumFractionDigits: 0 }
+      : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Product photo with graceful glyph fallback (first letter of the name).
+function cardVisual(p) {
+  const glyph = `<span class="glyph"${p.imageUrl ? ' style="display:none"' : ''}>${(p.name[0] || '?').toUpperCase()}</span>`;
+  const img = p.imageUrl
+    ? `<img src="${p.imageUrl}" alt="${p.name}" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    : '';
+  const tag = p.category ? `<span class="tag">${p.category}</span>` : '';
+  return `${img}${glyph}${tag}`;
+}
+
 function renderGrid(products) {
   const grid = document.getElementById('grid');
   if (!products.length) {
-    grid.innerHTML = '<p class="empty">No products found.</p>';
+    grid.innerHTML = '<p class="empty">No pieces found.</p>';
     return;
   }
   grid.innerHTML = products.map((p, index) => {
     const inStock = p.stockQuantity > 0;
     return `
-      <div class="card" style="animation-delay:${Math.min(index * 70, 700)}ms">
-        <div class="thumb">
-          ${productImage(p)}
-          ${p.category ? `<span class="cat-tag">${p.category}</span>` : ''}
-        </div>
-        <div class="body">
+      <article class="card" style="animation-delay:${Math.min(index * 70, 700)}ms">
+        <div class="card-visual">${cardVisual(p)}</div>
+        <div class="card-info">
           <h3>${p.name}</h3>
           <p class="desc">${p.description}</p>
           <div class="price-row">
-            <span class="price">${formatINR(p.price)}</span>
+            <span class="price">${formatPrice(p.price)}</span>
             ${inStock
-              ? `<button onclick="addToCart(${p.id}, this)">Add to Cart</button>`
+              ? `<button class="add" onclick="addToCart(${p.id}, this)">Add to cart</button>`
               : `<span class="badge-out">Out of stock</span>`}
           </div>
         </div>
-      </div>`;
+      </article>`;
   }).join('');
 }
 
@@ -99,7 +134,7 @@ async function addToCart(productId, button) {
   button.classList.add('added');
   button.disabled = true;
   setTimeout(() => {
-    button.textContent = 'Add to Cart';
+    button.textContent = 'Add to cart';
     button.classList.remove('added');
     button.disabled = false;
   }, 1200);
@@ -120,9 +155,6 @@ function showToast(message) {
 function refreshCartCount() {
   const count = document.getElementById('cartCount');
   count.textContent = Cart.count();
-  count.classList.remove('pop');
-  void count.offsetWidth; // restart the CSS animation
-  count.classList.add('pop');
 }
 
 function toggleCart() {
@@ -151,7 +183,7 @@ function renderCart() {
     <div class="cart-line">
       <div class="info">
         <div class="name">${i.name}</div>
-        <div class="price">${formatINR(i.unitPrice)} &times; ${i.quantity}</div>
+        <div class="price">${formatPrice(i.unitPrice)} &times; ${i.quantity}</div>
       </div>
       <button onclick="Cart.setQuantity(${i.productId}, ${i.quantity - 1}); renderCart();">-</button>
       <button onclick="Cart.setQuantity(${i.productId}, ${i.quantity + 1}); renderCart();">+</button>
@@ -180,18 +212,24 @@ function goCheckout() {
 function renderUserArea() {
   const user = Session.user();
   const area = document.getElementById('userArea');
+  const title = document.getElementById('welcomeTitle');
+  const sub = document.getElementById('welcomeSub');
+
   if (user) {
     area.innerHTML = `
-      <span>Hello, ${user.fullName.split(' ')[0]}!</span>
-      <a href="/orders.html">My Orders</a>
-      ${user.role === 'ADMIN' ? '<a href="/admin.html">Admin Panel</a>' : ''}
+      <span class="greet">Hello, ${user.fullName.split(' ')[0]}</span>
+      ${user.role === 'ADMIN' ? '<a href="/admin.html" class="link-btn">Admin</a>' : ''}
       <button class="link-btn" onclick="logout()">Logout</button>`;
+    title.textContent = `Welcome back, ${user.fullName}`;
+    sub.textContent = 'Fresh from this week\u2019s handpicked collection';
   } else {
-    area.innerHTML = `<button class="link-btn" onclick="openModal('login')">Login / Register</button>`;
+    area.innerHTML = `<button class="link-btn" onclick="openModal('login')">Sign in</button>`;
+    title.textContent = 'Welcome to V Shoba\u2019s Boutique';
+    sub.textContent = 'Handpicked sarees, kurtis and festive classics \u2014 chosen by Shoba herself.';
   }
-  document.getElementById('welcome').textContent = user
-    ? `Welcome back to V Shoba's Boutique, ${user.fullName}!`
-    : 'Welcome to V Shoba\'s Boutique - sarees, kurtis and more, delivered to your door.';
+
+  // Guests have no order history to view yet.
+  document.getElementById('ordersLink').style.display = user ? '' : 'none';
 }
 
 function logout() {
