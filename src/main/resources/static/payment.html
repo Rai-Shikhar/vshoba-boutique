@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - V Shoba's Boutique</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Razorpay checkout script. Remove or leave - harmless without a key. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <header>
+    <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
+    <div class="spacer"></div>
+    <span>Step 2 of 2: Payment</span>
+  </header>
+
+  <main style="max-width:560px">
+    <div class="panel">
+      <h2>Pay for Order #<span id="orderId"></span></h2>
+      <div class="summary-line"><span>Order total</span><span id="orderTotal" class="grand"></span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Choose Payment Method</h2>
+
+      <!-- Payment gateway: Razorpay, if you add your key in payment.js -->
+      <div class="pay-opt" data-method="online">
+        <div><strong>Card / UPI / NetBanking</strong><br><span class="small">Pay via secure payment gateway (Razorpay)</span></div>
+      </div>
+
+      <!-- Works out of the box: simulates a successful payment -->
+      <div class="pay-opt" data-method="cod">
+        <div><strong>Pay on Delivery</strong><br><span class="small">No online payment needed</span></div>
+      </div>
+
+      <div id="msg"></div>
+      <button class="btn" id="payBtn" style="width:100%;margin-top:8px">Pay Now</button>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/payment.js"></script>
+</body>
+</html>

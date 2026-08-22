@@ -1,0 +1,16 @@
+# Build artifacts
+target/
+
+# H2 local database files
+data/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log

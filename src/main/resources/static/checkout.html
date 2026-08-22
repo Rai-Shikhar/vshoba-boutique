@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - V Shoba's Boutique</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
+    <div class="spacer"></div>
+    <span>Step 1 of 2: Checkout</span>
+  </header>
+
+  <main style="max-width:760px">
+    <div class="panel">
+      <h2>Shipping Details</h2>
+      <form id="addressForm">
+        <textarea id="shippingAddress" rows="3" style="width:100%;padding:10px;border:1px solid #d8c4ae;border-radius:6px;font-size:.95rem;font-family:inherit" placeholder="Full shipping address" required></textarea>
+        <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="btn secondary" onclick="location.href='/'">Back to shop</button>
+          <button type="submit" class="btn">Place Order</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Order Summary</h2>
+      <div id="summary"></div>
+    </div>
+
+    <div id="msg"></div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>
