@@ -1,10 +1,10 @@
 # Render Blueprint - declarative deployment for V Shoba's Boutique.
-# Using this (instead of a manual Web Service) forces the Java buildpack,
-# which is why the Runtime is declared as "java" rather than detected.
+# Uses the DOCKER runtime (Render no longer auto-detects Java/Maven buildpacks -
+# it was falling back to Node.js). The Dockerfile builds the jar and runs it.
 #
 # Flow: push this file to GitHub, then on Render pick:
 #   New + -> Blueprint -> connect this repo.
-# Render creates the web service, applies the env vars below, and builds.
+# Render creates the web service, builds the Docker image, and applies env vars.
 #
 # Empty (sync: false) values are filled in by hand on the Render dashboard
 # after the blueprint creates the service - see README "Deploying to Render".
@@ -12,10 +12,9 @@
 services:
   - type: web
     name: vshoba-boutique
-    runtime: java
+    runtime: docker
     plan: free
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/boutique-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
