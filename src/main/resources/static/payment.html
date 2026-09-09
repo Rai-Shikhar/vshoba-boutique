@@ -4,15 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment - V Shoba's Boutique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <!-- Razorpay checkout script. Remove or leave - harmless without a key. -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
+  <div class="announce">Handpicked · Handwoven · Home delivered across India</div>
+
   <header>
     <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
     <div class="spacer"></div>
-    <span>Step 2 of 2: Payment</span>
+    <span class="step"><b>Step 2 of 2:</b> Payment</span>
   </header>
 
   <main style="max-width:560px">
@@ -22,7 +27,7 @@
     </div>
 
     <div class="panel">
-      <h2>Choose Payment Method</h2>
+      <h2>Choose Payment <em>Method</em></h2>
 
       <!-- Payment gateway: Razorpay, if you add your key in payment.js -->
       <div class="pay-opt" data-method="online">

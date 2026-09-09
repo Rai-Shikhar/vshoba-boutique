@@ -4,19 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - V Shoba's Boutique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <div class="announce">Handpicked · Handwoven · Home delivered across India</div>
+
   <header>
-    <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span> Admin</h1>
+    <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
     <div class="spacer"></div>
+    <span class="step"><b>Admin</b></span>
     <div id="adminUser"></div>
   </header>
 
   <main style="max-width:1000px">
     <!-- Login gate -->
     <div class="panel" id="loginGate" style="max-width:420px;margin:60px auto">
-      <h2>Admin Login</h2>
+      <h2>Admin <em>Login</em></h2>
       <div class="err" id="loginErr" style="color:#d9534f;min-height:1.2em"></div>
       <form id="adminLoginForm" style="display:flex;flex-direction:column;gap:10px">
         <input type="email" id="adminEmail" placeholder="Admin email" required>
@@ -35,7 +41,7 @@
       <!-- Inventory tab -->
       <div id="inventoryTab">
         <div class="panel">
-          <h2>Add / Edit Product</h2>
+          <h2>Add / Edit <em>Product</em></h2>
           <form class="grid-form" id="productForm">
             <input type="hidden" id="pfId">
             <input id="pfName" placeholder="Product name" required>
@@ -43,7 +49,7 @@
             <input id="pfPrice" type="number" step="0.01" min="0" placeholder="Price (₹)" required>
             <input id="pfStock" type="number" min="0" placeholder="Stock quantity" required>
             <input id="pfImage" class="full" placeholder="Image URL (optional)">
-            <textarea id="pfDescription" class="full" rows="2" style="padding:9px;border:1px solid #d8c4ae;border-radius:6px" placeholder="Description" required></textarea>
+            <textarea id="pfDescription" class="full" rows="2" placeholder="Description" required></textarea>
             <div class="full row-actions">
               <button type="submit" class="btn">Save Product</button>
               <button type="button" class="btn secondary" onclick="resetForm()">Clear</button>

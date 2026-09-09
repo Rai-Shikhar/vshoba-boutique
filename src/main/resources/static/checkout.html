@@ -4,21 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout - V Shoba's Boutique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <div class="announce">Handpicked · Handwoven · Home delivered across India</div>
+
   <header>
     <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
     <div class="spacer"></div>
-    <span>Step 1 of 2: Checkout</span>
+    <span class="step"><b>Step 1 of 2:</b> Checkout</span>
   </header>
 
   <main style="max-width:760px">
     <div class="panel">
-      <h2>Shipping Details</h2>
+      <h2>Shipping <em>Details</em></h2>
       <form id="addressForm">
-        <textarea id="shippingAddress" rows="3" style="width:100%;padding:10px;border:1px solid #d8c4ae;border-radius:6px;font-size:.95rem;font-family:inherit" placeholder="Full shipping address" required></textarea>
-        <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <textarea id="shippingAddress" rows="3" placeholder="Full shipping address" required></textarea>
+        <div style="margin-top:16px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
           <button type="button" class="btn secondary" onclick="location.href='/'">Back to shop</button>
           <button type="submit" class="btn">Place Order</button>
         </div>
