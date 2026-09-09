@@ -2,22 +2,31 @@
 // the backend marks the order PAID via POST /api/orders/{id}/pay.
 
 // === RAZORPAY SETUP (optional) ===
-// To accept REAL payments:
+// The key is NOT hardcoded here anymore. The backend serves it from the
+// environment (razorpay.key=${RAZORPAY_KEY} in prod) via GET /api/config/razorpay-key.
 //   1. Create a free account at https://razorpay.com (test mode works)
-//   2. Put your test key id here:  const RAZORPAY_KEY_ID = 'rzp_test_XXXX';
+//   2. On Render set the RAZORPAY_KEY env var (test key id) + RAZORPAY_SECRET.
 //   3. The "Pay Now" button will open Razorpay's checkout and the
 //      payment gets verified before the order is marked PAID.
-// Without a key, the button simulates a successful payment instead.
-const RAZORPAY_KEY_ID = null;
+// Without a key configured, the button simulates a successful payment instead.
+let RAZORPAY_KEY_ID = null;
 
 let orderId = null;
 let method = 'online';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const user = Session.user();
   if (!user) {
     window.location.href = '/';
     return;
+  }
+
+  // Pull the Razorpay key from the backend (empty when not configured).
+  try {
+    const config = await API.get('/api/config/razorpay-key');
+    if (config && config.key) RAZORPAY_KEY_ID = config.key;
+  } catch {
+    // Key unavailable -> stay in simulated-payment mode.
   }
 
   const params = new URLSearchParams(window.location.search);

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - V Shoba's Boutique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="announce">Handpicked · Handwoven · Home delivered across India</div>
+
+  <header>
+    <h1 onclick="location.href='/'">V Shoba's <span>Boutique</span></h1>
+    <div class="spacer"></div>
+    <a href="/" class="back">Back to shop</a>
+  </header>
+
+  <main style="max-width:560px">
+    <h2 style="margin-bottom:18px">My <em>Profile</em></h2>
+
+    <div class="panel" id="profileInfo" style="display:none">
+      <h2 style="font-size:20px; margin-bottom:8px">Account Details</h2>
+      <p id="profileName"></p>
+      <p id="profileEmail"></p>
+    </div>
+
+    <div class="panel" id="loginPanel" style="display:none">
+      <h2 style="font-size:20px; margin-bottom:14px">Session Expired</h2>
+      <p class="msg err" style="margin-bottom:16px">Please log in again to access your profile.</p>
+      <form id="reloginForm" style="display:flex; flex-direction:column; gap:14px">
+        <input type="email" id="reloginEmail" placeholder="Email" required>
+        <input type="password" id="reloginPassword" placeholder="Password" required>
+        <div class="msg" id="reloginErr"></div>
+        <button type="submit" class="btn" style="justify-self:start">Log In</button>
+      </form>
+    </div>
+
+    <div class="panel" id="pwPanel" style="display:none">
+      <h2 style="font-size:20px; margin-bottom:18px">Change <em>Password</em></h2>
+      <div class="msg" id="pwMsg"></div>
+      <form id="changePwForm" style="display:flex; flex-direction:column; gap:14px">
+        <input type="password" id="oldPassword" placeholder="Current password" required>
+        <input type="password" id="newPassword" placeholder="New password (min 8 characters)" required minlength="8">
+        <input type="password" id="confirmPassword" placeholder="Confirm new password" required minlength="8">
+        <button type="submit" class="btn" style="justify-self:start">Update Password</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>

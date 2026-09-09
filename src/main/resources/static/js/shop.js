@@ -218,6 +218,7 @@ function renderUserArea() {
   if (user) {
     area.innerHTML = `
       <span class="greet">Hello, ${user.fullName.split(' ')[0]}</span>
+      <a href="/profile.html" class="link-btn">Profile</a>
       ${user.role === 'ADMIN' ? '<a href="/admin.html" class="link-btn">Admin</a>' : ''}
       <button class="link-btn" onclick="logout()">Logout</button>`;
     title.textContent = `Welcome back, ${user.fullName}`;

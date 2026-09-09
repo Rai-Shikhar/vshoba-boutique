@@ -89,6 +89,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- PostgreSQL driver for production (Render free tier) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Test framework for later phases. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

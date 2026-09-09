@@ -61,7 +61,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login", "/h2-console/**").permitAll()
                 .requestMatchers("/", "/index.html", "/checkout.html", "/payment.html",
-                        "/orders.html", "/admin.html", "/css/**", "/js/**", "/favicon.ico").permitAll()
+                        "/orders.html", "/admin.html", "/profile.html", "/css/**", "/js/**", "/favicon.ico").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/all").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .requestMatchers("/api/orders/mine").authenticated()
