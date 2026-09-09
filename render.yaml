@@ -1,0 +1,36 @@
+# Render Blueprint - declarative deployment for V Shoba's Boutique.
+# Using this (instead of a manual Web Service) forces the Java buildpack,
+# which is why the Runtime is declared as "java" rather than detected.
+#
+# Flow: push this file to GitHub, then on Render pick:
+#   New + -> Blueprint -> connect this repo.
+# Render creates the web service, applies the env vars below, and builds.
+#
+# Empty (sync: false) values are filled in by hand on the Render dashboard
+# after the blueprint creates the service - see README "Deploying to Render".
+
+services:
+  - type: web
+    name: vshoba-boutique
+    runtime: java
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/boutique-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # Auto-generates a secure random JWT signing secret (prod profile requires it).
+      - key: JWT_SECRET
+        generateValue: true
+      # Filled in manually after creation, from the Render Postgres dashboard.
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      # Test-mode Razorpay credentials - set to real values before going live.
+      - key: RAZORPAY_KEY
+        sync: false
+      - key: RAZORPAY_SECRET
+        sync: false
