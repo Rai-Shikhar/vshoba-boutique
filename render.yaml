@@ -21,12 +21,12 @@ services:
       # Auto-generates a secure random JWT signing secret (prod profile requires it).
       - key: JWT_SECRET
         generateValue: true
-      # Filled in manually after creation, from the Render Postgres dashboard.
-      - key: DATABASE_URL
+      # Postgres credentials - filled in manually after creation from the
+      # Render Postgres dashboard (Info -> Internal Database URL).
+      # The JDBC URL itself has a hardcoded fallback in application-prod.properties.
+      - key: SPRING_DATASOURCE_USERNAME
         sync: false
-      - key: DATABASE_USERNAME
-        sync: false
-      - key: DATABASE_PASSWORD
+      - key: SPRING_DATASOURCE_PASSWORD
         sync: false
       # Test-mode Razorpay credentials - set to real values before going live.
       - key: RAZORPAY_KEY
