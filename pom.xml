@@ -96,6 +96,22 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Razorpay payment gateway: server-side order creation + signature
+             verification. Loads from the Razorpay Maven repository below. -->
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.6</version>
+        </dependency>
+
+        <!-- Loads RAZORPAY_* / other keys from a local .env file during
+             development (env vars still win everywhere else). -->
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
         <!-- Test framework for later phases. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -104,6 +120,14 @@
         </dependency>
 
     </dependencies>
+
+    <!-- Razorpay publishes its Java SDK only on its own Maven repository. -->
+    <repositories>
+        <repository>
+            <id>razorpay</id>
+            <url>https://mvn.razorpay.com/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

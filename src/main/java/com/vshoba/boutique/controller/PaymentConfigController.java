@@ -11,8 +11,8 @@ import java.util.Map;
  * Public checkout config. The frontend (payment.js) needs the Razorpay
  * key to open the checkout widget, but the key must NOT be hardcoded in
  * static JS files. It is served from the environment via properties:
- *   - prod:   razorpay.key=${RAZORPAY_KEY}  (application-prod.properties)
- *   - local:  defaults to empty (no key = simulated payment)
+ *   - prod:   razorpay.key-id=${RAZORPAY_KEY_ID}  (application-prod.properties)
+ *   - local:  loaded from the local .env file via spring-dotenv
  *
  * Returning the key here is safe - Razorpay publishes its key in the
  * customer's browser anyway; the SECRET stays server-side only.
@@ -23,7 +23,7 @@ public class PaymentConfigController {
 
     private final String razorpayKey;
 
-    public PaymentConfigController(@Value("${razorpay.key:}") String razorpayKey) {
+    public PaymentConfigController(@Value("${razorpay.key-id:}") String razorpayKey) {
         this.razorpayKey = razorpayKey;
     }
 

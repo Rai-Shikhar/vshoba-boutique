@@ -36,6 +36,16 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Razorpay gateway/API failure — not the client's fault.
+     * Returns 500 so the client can retry later.
+     */
+    @ExceptionHandler(RazorpayIntegrationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleRazorpayIntegration(RazorpayIntegrationException ex) {
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+    }
+
+    /**
      * Wrong email/password at login -> 401 Unauthorized.
      */
     @ExceptionHandler(AuthenticationException.class)

@@ -29,7 +29,7 @@ services:
       - key: SPRING_DATASOURCE_PASSWORD
         sync: false
       # Test-mode Razorpay credentials - set to real values before going live.
-      - key: RAZORPAY_KEY
+      - key: RAZORPAY_KEY_ID
         sync: false
-      - key: RAZORPAY_SECRET
+      - key: RAZORPAY_KEY_SECRET
         sync: false

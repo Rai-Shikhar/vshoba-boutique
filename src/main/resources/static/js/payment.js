@@ -1,14 +1,13 @@
 // Payment page: after the customer pays (really or simulated),
-// the backend marks the order PAID via POST /api/orders/{id}/pay.
+// the backend verifies the Razorpay signature and marks the order PAID.
 
 // === RAZORPAY SETUP (optional) ===
-// The key is NOT hardcoded here anymore. The backend serves it from the
-// environment (razorpay.key=${RAZORPAY_KEY} in prod) via GET /api/config/razorpay-key.
-//   1. Create a free account at https://razorpay.com (test mode works)
-//   2. On Render set the RAZORPAY_KEY env var (test key id) + RAZORPAY_SECRET.
-//   3. The "Pay Now" button will open Razorpay's checkout and the
-//      payment gets verified before the order is marked PAID.
-// Without a key configured, the button simulates a successful payment instead.
+// The secret is NEVER in the browser. The backend owns both credentials:
+//   - POST /api/razorpay/create-order   creates the Razorpay order server-side
+//   - POST /api/razorpay/verify-payment verifies the HMAC signature
+// The frontend only ever receives the public KEY_ID (from the create-order
+// response), which is what the checkout widget needs.
+// Without keys configured, the button simulates a successful payment instead.
 let RAZORPAY_KEY_ID = null;
 
 let orderId = null;
@@ -82,22 +81,58 @@ async function pay() {
 
 // Real Razorpay flow (used only when RAZORPAY_KEY_ID is set).
 async function startRazorpay() {
-  const order = await API.get(`/api/orders/${orderId}`);
+  // 1. Backend creates the Razorpay order for OUR order id and returns
+  //    the order_id + key. The amount is computed server-side from the DB,
+  //    so the client cannot change what is charged.
+  const rzOrder = await API.post('/api/razorpay/create-order', { orderId });
+
+  // 2. Open the Standard Checkout modal bound to that server order.
   const options = {
-    key: RAZORPAY_KEY_ID,
-    amount: Math.round(Number(order.totalAmount) * 100), // rupees -> paise
-    currency: 'INR',
+    key: rzOrder.key,
+    order_id: rzOrder.order_id,
+    amount: Number(rzOrder.amount),    // paise
+    currency: rzOrder.currency,
     name: 'V Shoba\'s Boutique',
-    description: `Order #${order.id}`,
-    handler: async (response) => {
-      // Payment succeeded on Razorpay's side.
-      await API.post(`/api/orders/${order.id}/pay`, {});
-      showSuccess();
+    description: `Order #${orderId}`,
+    prefill: {
+      email: ((Session.user() || {}).email || ''),
     },
-    modal: { ondismiss: () => {} },
+    // 3. Successful payment -> Razorpay invokes this with the three ids
+    //    needed to verify the signature on the backend.
+    handler: async (response) => {
+      try {
+        await API.post('/api/razorpay/verify-payment', {
+          orderId,
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
+        });
+        showSuccess();
+      } catch (err) {
+        // Signature mismatch / already paid / server error: NOT marked paid.
+        showError('Payment could not be confirmed: ' + err.message);
+      }
+    },
+    modal: {
+      // 4. User dismissed the modal without paying. Order stays PENDING.
+      ondismiss: () => {
+        showError('Payment cancelled - your order is still pending. You can try again from My Orders.');
+      },
+    },
   };
+
   const rzp = new window.Razorpay(options);
+  rzp.on('payment.failed', (response) => {
+    const details = response.error || {};
+    showError('Payment failed: ' + (details.description || 'please try again') + '. Order remains pending.');
+  });
   rzp.open();
+}
+
+function showError(text) {
+  const msg = document.getElementById('msg');
+  msg.className = 'msg err';
+  msg.textContent = text;
 }
 
 function showSuccess() {
