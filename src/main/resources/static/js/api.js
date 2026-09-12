@@ -23,6 +23,12 @@ const API = {
 
     const data = await res.json().catch(() => null);
     if (!res.ok) {
+      // A real "not logged in" means the stored token is dead (expired, or
+      // signed under an old JWT secret). Discard it so the user can log
+      // in fresh instead of retrying a broken token forever on this page.
+      if (res.status === 401 && data && data.message === 'You are not logged in') {
+        Session.clear();
+      }
       throw new Error(data && data.message ? data.message : 'Something went wrong');
     }
     return data;

@@ -73,6 +73,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/products/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
                 .requestMatchers("/api/orders/**").authenticated()
+                .requestMatchers("/api/razorpay/**").authenticated()
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex
