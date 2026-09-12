@@ -9,7 +9,16 @@ const API = {
     const token = localStorage.getItem('vshoba_token');
     if (token) headers['Authorization'] = 'Bearer ' + token;
 
-    const res = await fetch(path, { ...options, headers });
+    let res;
+    try {
+      res = await fetch(path, { ...options, headers });
+    } catch {
+      // The request never reached the server (offline, network error, timeout,
+      // or the free-tier site waking from a 15-min sleep). This is NOT a
+      // 401 - show a distinct message so we don't misread it as a login issue.
+      throw new Error('Cannot reach the server. It may still be waking up from the free-tier sleep - try again in a few seconds.');
+    }
+
     if (res.status === 204) return null;
 
     const data = await res.json().catch(() => null);

@@ -28,9 +28,13 @@ function showLoginPanel() {
 async function verifyToken() {
   try {
     await API.get('/api/auth/me');
-  } catch {
-    Session.clear();
-    showLoginPanel();
+  } catch (err) {
+    // Only the backend's real 401 means "logged out". A network/connection
+    // error (free-tier cold start, offline) must NOT wipe the session.
+    if (err.message === 'You are not logged in') {
+      Session.clear();
+      showLoginPanel();
+    }
   }
 }
 
