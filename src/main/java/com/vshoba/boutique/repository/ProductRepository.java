@@ -57,6 +57,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByStockQuantityLessThanEqualOrderByStockQuantityAsc(int threshold);
 
     /**
+     * True if a product with this exact name (case-insensitive) already exists.
+     * Used by the startup seeder so a redeploy never creates duplicates.
+     */
+    boolean existsByNameIgnoreCase(String name);
+
+    /**
      * All distinct categories, alphabetically. Powers the category dropdown.
      *
      * This one cannot be expressed as a derived query method name,
