@@ -110,8 +110,10 @@ public class RazorpayController {
             throw new RazorpayIntegrationException("Razorpay order creation failed: " + e.getMessage());
         }
 
+        String razorpayOrderId = (String) razorpayOrder.get("id");
+
         return Map.of(
-                "order_id", String.valueOf(razorpayOrder.get("id")),
+                "order_id", razorpayOrderId,
                 "amount", String.valueOf(amountPaise),
                 "currency", "INR",
                 "key", keyId

@@ -99,4 +99,18 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                 "Invalid value '" + ex.getValue() + "' for parameter '" + ex.getName() + "'");
     }
+
+    /**
+     * Fallback for any unexpected error. WITHOUT this, an uncaught
+     * exception escapes into Tomcat's /error dispatch and can be
+     * mistaken for a security 401 ("You are not logged in") -
+     * which is confusing. Every known case above gets its own
+     * precise answer; anything else becomes a clear 500.
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleUnexpected(Exception ex) {
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred: " + ex.getClass().getSimpleName());
+    }
 }
